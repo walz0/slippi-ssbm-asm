@@ -154,7 +154,15 @@ INIT_1v1_PLAYER_TEXT:
 # Initialize Team 1 Text
 addi r3, REG_TEXT_PROPERTIES, TPO_P1_LABEL_COLOR
 addi r4, REG_TEXT_PROPERTIES, TPO_P1_STRING
+
+# Load Remote Player Index into r6
+lbz r6, MSRB_REMOTE_PLAYER_INDEX(REG_MSRB_ADDR)
+# Player 1 Remote Player
+cmpwi r6, 1
+bne P1_NAME_END
+
 addi r5, REG_MSRB_ADDR, MSRB_P1_NAME
+P1_NAME_END:
 li r6, 0
 lfs f1, TPO_P1_X_POS(REG_TEXT_PROPERTIES)
 bl INIT_PLAYER_TEXT
@@ -162,7 +170,15 @@ bl INIT_PLAYER_TEXT
 # Initialize Team 2 Text
 addi r3, REG_TEXT_PROPERTIES, TPO_P2_LABEL_COLOR
 addi r4, REG_TEXT_PROPERTIES, TPO_P2_STRING
+
+# Load Remote Player Index into r6
+lbz r6, MSRB_REMOTE_PLAYER_INDEX(REG_MSRB_ADDR)
+# Player 1 Remote Player
+cmpwi r6, 0
+bne P2_NAME_END
+
 addi r5, REG_MSRB_ADDR, MSRB_P2_NAME
+P2_NAME_END:
 li r6, 0
 lfs f1, TPO_P2_X_POS(REG_TEXT_PROPERTIES)
 bl INIT_PLAYER_TEXT

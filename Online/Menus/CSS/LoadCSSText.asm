@@ -769,6 +769,50 @@ b UPDATE_PLAYING_VALUE
 UPDATE_PLAYING_VALUE_CONNECTED:
 addi r5, REG_MSRB_ADDR, MSRB_OPP_NAME
 
+.set SOCIAL_VISIBLE, 0
+.set SOCIAL_HIDE_OTHERS, 1
+.set SOCIAL_HIDE_ME, 2
+.set SOCIAL_HIDE_BOTH, 3
+
+# lbz r6, MSRB_LOCAL_PLAYER_SOCIAL(REG_MSRB_ADDR)
+# cmpwi r6, SOCIAL_VISIBLE
+# beq SOCIAL_END
+
+# lbz r6, MSRB_LOCAL_PLAYER_SOCIAL(REG_MSRB_ADDR)
+# cmpwi r6, SOCIAL_HIDE_OTHERS
+# beq HIDE_OTHERS
+
+HIDE_OTHERS:
+# Only anonymize opponents name locally
+lbz r6, MSRB_REMOTE_PLAYER_INDEX(REG_MSRB_ADDR)
+
+.set EN_CHAR_STRING_BASE_ADDR, 0x803d4fdc
+.set JP_CHAR_STRING_BASE_ADDR, 0x803d4d74
+mulli r4, r6, 0x24 # Port offset for char id
+addi r5, r4, MSRB_GAME_INFO_BLOCK + 0x60 # Add external char id offset
+add r5, r5, REG_MSRB_ADDR # Add offset to MSRB
+lbz r5, 0(r5) # Load CHAR_ID from memory
+mulli r5, r5, 4 # Multiply CHAR_ID by size of ptr to get offset
+
+# Load English strings by default
+load r4, EN_CHAR_STRING_BASE_ADDR # Load EN base addr into r4
+# Get language setting
+branchl r12, 0x8000ad8c # Language_GetLanguageSetting
+# Check if language is Japanese
+cmpwi r3, 0
+bne EN_LANG
+
+JP_LANG:
+load r4, JP_CHAR_STRING_BASE_ADDR # Load JP base addr into r4
+EN_LANG: # Skip to this label if language is English
+
+add r5, r5, r4 # Add ptr offset to base addr
+lwz r5, 0(r5)
+
+# Reload text struct into r3
+mr r3, REG_TEXT_STRUCT
+SOCIAL_END:
+
 UPDATE_PLAYING_VALUE:
 li r4, STIDX_PLAYING_OPP
 bl FN_UPDATE_TEXT
