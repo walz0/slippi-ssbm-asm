@@ -22,7 +22,7 @@
 load r5, EN_CHAR_STRING_TABLE # Load EN base addr into r4
 
 # Multiply char id by size of shift-jis string ptr to get offset
-mulli r3, r3, 4 
+mulli r3, r3, 4
 # Check if language is Japanese
 cmpwi r4, 0
 bne EN_LANG
@@ -31,6 +31,6 @@ JP_LANG:
 load r5, JP_CHAR_STRING_TABLE # Load JP base addr into r4
 EN_LANG: # Skip to this label if language is English
 
-add r5, r5, r6 # Add ptr offset to base addr
+add r5, r3, r5 # Add ptr offset to base addr
 lwz r5, 0(r5)
 blr
