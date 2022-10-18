@@ -310,21 +310,46 @@ add r4, r4, r5
 .set SOCIAL_VISIBLE, 0
 .set SOCIAL_HIDE_OTHERS, 1
 .set SOCIAL_HIDE_ME, 2
-.set SOCIAL_HIDE_BOTH, 3
+.set SOCIAL_HIDE_ALL, 3
 
-# lbz r6, MSRB_LOCAL_PLAYER_SOCIAL(REG_MSRB_ADDR)
-# cmpwi r6, SOCIAL_VISIBLE
-# beq SOCIAL_END
+# # Load remote player index
+# lbz r7, MSRB_REMOTE_PLAYER_INDEX(REG_MSRB_ADDR)
 
-# lbz r6, MSRB_LOCAL_PLAYER_SOCIAL(REG_MSRB_ADDR)
-# cmpwi r6, SOCIAL_HIDE_OTHERS
-# beq HIDE_OTHERS
+# Hide nothing
+lbz r6, MSRB_LOCAL_PLAYER_SOCIAL(REG_MSRB_ADDR)
+cmpwi r6, SOCIAL_VISIBLE
+beq SOCIAL_END
+
+# Hide opponent tag locally
+lbz r6, MSRB_LOCAL_PLAYER_SOCIAL(REG_MSRB_ADDR)
+cmpwi r6, SOCIAL_HIDE_OTHERS
+beq HIDE_OTHERS
+
+# Probably need to loop over all remote players to check if
+# they any of them have "Hide Me" or "Hide ALL" selected
+li r6, 0
+REMOTE_SOCIAL_CHECK_LOOP:
+# Hide opponent tag remotely
+addi r5, r6, MSRB_P1_SOCIAL
+add r5, r5, REG_MSRB_ADDR # Add offset to MSRB
+lbz r5, 0(r5)
+cmpwi r5, SOCIAL_HIDE_ME
+beq HIDE_OTHERS # Functionally the same
+cmpwi r6, 4
+blt r6
+
+# Hide opponents tag locally and hide opponent tag remotely
+lbz r6, MSRB_LOCAL_PLAYER_SOCIAL(REG_MSRB_ADDR)
+cmpwi r6, SOCIAL_HIDE_ALL
+beq HIDE_ALL
 
 HIDE_OTHERS:
-# Only anonymize opponents name locally
+# Anonymize opponent name locally
 lbz r6, MSRB_REMOTE_PLAYER_INDEX(REG_MSRB_ADDR)
 cmpw REG_COUNT, r6
 bne SOCIAL_END
+
+HIDE_ALL:
 
 .set EN_CHAR_STRING_BASE_ADDR, 0x803d4fdc
 .set JP_CHAR_STRING_BASE_ADDR, 0x803d4d74
