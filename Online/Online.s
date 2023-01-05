@@ -507,6 +507,16 @@
 .endm
 
 ################################################################################
+# Rank Info Reponse Buffer
+################################################################################
+.set RIRB_CMD, 0 # u8
+.set RIRB_LOCAL_PLAYER_RANK, RIRB_CMD + 1 # u8
+.set RIRB_LOCAL_PLAYER_RATING, RIRB_LOCAL_PLAYER_RANK + 1 # float
+.set RIRB_LOCAL_PLAYER_GLOBAL, RIRB_LOCAL_PLAYER_RATING + 4 # u8
+.set RIRB_LOCAL_PLAYER_REGIONAL, RIRB_LOCAL_PLAYER_GLOBAL + 1 # u8
+.set RIRB_SIZE, RIRB_LOCAL_PLAYER_REGIONAL + 1
+
+################################################################################
 # slpCSS Symbol Structure
 ################################################################################
 .set SLPCSS_CHATSELECT, 0x0

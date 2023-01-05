@@ -542,6 +542,7 @@ add \reg, r3, r4
 .set CONST_SlippiCmdSendNameEntryIndex,0xBE
 .set CONST_SlippiCmdNameEntryAutoComplete,0xBF
 .set CONST_SlippiCmdReportSetCompletion,0xC2
+.set CONST_SlippiCmdGetRank,0xC3
 # For Slippi file loads
 .set CONST_SlippiCmdFileLength, 0xD1
 .set CONST_SlippiCmdFileLoad, 0xD2
