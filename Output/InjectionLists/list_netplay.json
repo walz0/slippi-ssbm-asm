@@ -785,6 +785,13 @@
    "Tags": ""
   },
   {
+   "InjectionAddress": "8008653C",
+   "Name": "Required: Slippi Online",
+   "Codetype": "Auto",
+   "Annotation": "Online/Core/WhispyBlowDirFix/WhispyBlowDirFix.asm",
+   "Tags": "[affects-gameplay]"
+  },
+  {
    "InjectionAddress": "80266BC4",
    "Name": "Required: Slippi Online",
    "Codetype": "Auto",
@@ -1223,13 +1230,6 @@
    "Name": "Required: Slippi Online",
    "Codetype": "Auto",
    "Annotation": "Online/Static/CSSUpdateCSP.asm",
-   "Tags": ""
-  },
-  {
-   "InjectionAddress": "800056AC",
-   "Name": "Required: Slippi Online",
-   "Codetype": "Auto",
-   "Annotation": "Online/Static/ChatMessages.asm",
    "Tags": ""
   },
   {
